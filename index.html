@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>有名 | NAME IN TAIWAN — 在臺灣，有個好名字。</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#FAF9F6',
+            ink: '#1E293B',
+            forest: '#163D33',
+            sage: '#4A6B62',
+            terracotta: '#C25943',
+            sand: '#EFE0C4',
+            jade: {
+              50: '#F0FDFA',
+              100: '#CCFBF1',
+              600: '#0D9488',
+              700: '#0F766E',
+              800: '#115E59',
+            },
+            amberwarm: {
+              50: '#FFFBEB',
+              100: '#FEF3C7',
+              600: '#D97706',
+              700: '#B45309',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'Inter', 'sans-serif'],
+            serif: ['"Noto Serif TC"', 'serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #FAF9F6;
+      color: #1E293B;
+    }
+    .card-shadow {
+      box-shadow: 0 4px 20px -2px rgba(30, 41, 59, 0.06);
+    }
+    .brand-seal {
+      border-radius: 6px 14px 8px 12px;
+    }
+    .fade-in {
+      animation: fadeIn 0.35s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-jade-100 selection:text-jade-800">
+
+  <!-- Top Notification Toast (Replaces alert) -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden transform transition-all duration-300 max-w-sm bg-ink text-white px-4 py-3 rounded-xl shadow-lg text-sm flex items-center gap-2.5">
+    <span id="toast-icon" class="text-jade-100 font-bold">✓</span>
+    <span id="toast-msg">訊息提示</span>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-paper/95 backdrop-blur-sm border-b border-slate-200/80 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <!-- Brand Seal & Title -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 brand-seal bg-forest text-white flex items-center justify-center font-serif text-2xl font-normal shadow-sm shrink-0 -rotate-2 select-none">
+          名
+        </div>
+        <div>
+          <h1 class="font-serif text-2xl font-medium text-forest tracking-wider leading-tight">
+            有名
+          </h1>
+          <p class="text-[11px] font-medium text-sage tracking-[0.22em] uppercase mt-0.5">
+            NAME IN TAIWAN
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Tagline + Optional AI Enhancement Toggle -->
+      <div class="flex flex-col sm:items-end gap-1.5">
+        <div class="sm:text-right leading-snug">
+          <p class="text-xs sm:text-sm font-medium text-forest/90">從你的名字，開始一段臺灣故事。</p>
+          <p class="text-xs text-sage">A new name. A new connection.</p>
+        </div>
+        <button id="toggle-api-btn" type="button" class="w-fit text-[11px] px-2.5 py-1 rounded-lg border border-slate-200/90 bg-white/80 hover:border-forest/40 hover:bg-white text-sage hover:text-forest transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amberwarm-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span id="api-status-label">Engine / 引擎：Built-in Offline (免設定)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible Gemini API Key Drawer -->
+    <div id="api-drawer" class="hidden bg-slate-50 border-t border-slate-200/80">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div class="text-slate-600">
+          <span class="font-semibold text-ink">Optional Gemini API Key / 選填 AI 潤飾金鑰：</span>
+          Works offline out-of-the-box with zero setup. Paste a Google Gemini API key only if you want AI-enhanced poetic English narratives.
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <input id="gemini-api-key" type="password" placeholder="Paste AIzaSy... (Optional / 選填)" class="w-full sm:w-64 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-ink focus:outline-none focus:ring-2 focus:ring-jade-600" />
+          <button id="save-api-btn" type="button" class="px-3 py-1.5 rounded-lg bg-jade-700 text-white font-medium hover:bg-jade-800 whitespace-nowrap">
+            Apply / 套用
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+    <!-- Editorial Hero Section (Inspired by 有名 / NAME IN TAIWAN) -->
+    <section class="mb-8 sm:mb-10 fade-in">
+      <div class="flex items-center gap-2.5 mb-4">
+        <span class="w-2.5 h-2.5 rounded-full bg-terracotta inline-block"></span>
+        <span class="text-xs sm:text-sm font-semibold tracking-[0.2em] text-forest uppercase">
+          YOUR STORY, IN MANDARIN
+        </span>
+      </div>
+
+      <h2 class="font-serif text-4xl sm:text-5xl md:text-6xl font-normal text-forest leading-[1.32] tracking-wide mb-5">
+        在臺灣，<br />
+        有個<span class="relative inline-block">
+          <span class="relative z-10">好名字</span>
+          <svg class="absolute -bottom-1.5 left-0 w-full h-3.5 text-sand -z-0 pointer-events-none" viewBox="0 0 200 18" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+            <path d="M2 13 C 55 4, 145 3, 198 11 C 199 15, 195 17, 190 16 C 138 11, 58 13, 6 17 C 1 17, 0 15, 2 13 Z" />
+          </svg>
+        </span>。
+      </h2>
+
+      <div class="space-y-1.5 max-w-xl">
+        <p class="text-sm sm:text-base text-sage leading-relaxed">
+          A Mandarin name—a new beginning,<br class="hidden sm:inline" />
+          and a new connection with Taiwan.
+        </p>
+      </div>
+    </section>
+
+    <!-- Mode Switcher Tabs -->
+    <div class="flex flex-wrap gap-2 p-1.5 bg-slate-200/60 rounded-2xl w-full sm:w-fit mb-6">
+      <button id="tab-student" type="button" class="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white text-jade-700 shadow-sm transition flex items-center justify-center gap-2">
+        <span>🎓</span>
+        <span>學生互動取名 / Find Your Chinese Name</span>
+      </button>
+      <button id="tab-teacher" type="button" class="flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-ink transition flex items-center justify-center gap-2">
+        <span>📋</span>
+        <span>教師批次處理 / Teacher Batch CSV Upload</span>
+      </button>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: STUDENT INTERACTIVE MODE                                       -->
+    <!-- ===================================================================== -->
+    <section id="panel-student" class="fade-in">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Form Card -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 card-shadow">
+          <div class="mb-5">
+            <h2 class="text-lg font-bold text-ink">探索你的臺灣中文名字</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Discover Your Authentic Taiwanese Mandarin Name</p>
+          </div>
+
+          <form id="student-form" class="space-y-4">
+            <!-- English Name -->
+            <div>
+              <label for="st-name" class="block text-sm font-semibold text-ink mb-1">
+                英文全名 / Full English Name (First + Last Name) <span class="text-rose-500">*</span>
+              </label>
+              <input id="st-name" type="text" required placeholder="e.g., Liam Miller / Chloe Anderson / Miller, Sarah" value="Liam Miller"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-paper/50 focus:bg-white text-ink focus:outline-none focus:ring-2 focus:ring-jade-600 transition" />
+              <div id="st-lastname-feedback" class="mt-1.5 text-[11px] px-2.5 py-1.5 rounded-lg bg-jade-50/80 border border-jade-200/80 text-jade-800 flex flex-wrap items-center gap-1.5">
+                <!-- Live last-name detection badge injected dynamically -->
+              </div>
+            </div>
+
+            <!-- Gender -->
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-1.5">
+                性別傾向 / Gender Preference
+              </label>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-gender" value="M" class="peer sr-only" checked />
+                  <div class="text-center py-2.5 px-2 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-600 peer-checked:border-jade-600 peer-checked:bg-jade-50 peer-checked:text-jade-800 transition">
+                    <div>男性 / Male</div>
+                    <div class="text-[10px] opacity-75">(M)</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-gender" value="F" class="peer sr-only" />
+                  <div class="text-center py-2.5 px-2 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-600 peer-checked:border-jade-600 peer-checked:bg-jade-50 peer-checked:text-jade-800 transition">
+                    <div>女性 / Female</div>
+                    <div class="text-[10px] opacity-75">(F)</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-gender" value="N" class="peer sr-only" />
+                  <div class="text-center py-2.5 px-2 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-600 peer-checked:border-jade-600 peer-checked:bg-jade-50 peer-checked:text-jade-800 transition">
+                    <div>中性・不拘</div>
+                    <div class="text-[10px] opacity-75">Gender-Neutral (N)</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Style -->
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-1.5">
+                名字風格 / Naming Style
+              </label>
+              <div class="grid grid-cols-1 gap-2.5">
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-style" value="modern" class="peer sr-only" checked />
+                  <div class="p-3 rounded-xl border border-slate-200 peer-checked:border-jade-600 peer-checked:bg-jade-50/70 transition">
+                    <div class="text-sm font-bold text-ink">🌿 現代臺灣文青風 / Modern Taiwanese Aesthetic</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">Natural, warm, contemporary names popular among young Taiwanese.</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-style" value="classical" class="peer sr-only" />
+                  <div class="p-3 rounded-xl border border-slate-200 peer-checked:border-amberwarm-600 peer-checked:bg-amberwarm-50/70 transition">
+                    <div class="text-sm font-bold text-ink">📜 古典詩詞底蘊風 / Classical Poetry &amp; Literature</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">Poetic, literary names inspired by Tang &amp; Song poetry.</div>
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="st-style" value="either" class="peer sr-only" />
+                  <div class="p-3 rounded-xl border border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/70 transition">
+                    <div class="text-sm font-bold text-ink">✨ 不拘・皆可 / Either / Both Styles (Modern &amp; Classical Mix)</div>
+                    <div class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">Let the engine curate a balanced mix of both contemporary Taiwanese warmth and classical poetic elegance.</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Two Imageries -->
+            <div class="space-y-3 pt-1">
+              <div class="text-sm font-semibold text-ink">
+                喜歡的自然或情感意象 / Preferred Imagery &amp; Traits
+              </div>
+
+              <div>
+                <label for="st-img1" class="block text-xs font-medium text-slate-600 mb-1">
+                  意象一 / First Imagery or Trait
+                </label>
+                <select id="st-img1" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-ink focus:outline-none focus:ring-2 focus:ring-jade-600">
+                  <option value="default">預設：祝福・智慧・平安 / Default: Blessing, Wisdom &amp; Peace</option>
+                  <option value="sunshine">☀️ 陽光・溫暖 / Sunlight &amp; Warmth</option>
+                  <option value="ocean">🌊 海洋・水波 / Ocean &amp; Water</option>
+                  <option value="forest">🌲 山岳・森林 / Mountain &amp; Forest</option>
+                  <option value="stars">✨ 星辰・天空 / Stars &amp; Sky</option>
+                  <option value="calm">🍃 平靜・療癒 / Peace &amp; Healing</option>
+                  <option value="wisdom">📖 智慧・洞察 / Wisdom &amp; Insight</option>
+                  <option value="freedom">🕊️ 自由・遠大 / Freedom &amp; Aspiration</option>
+                  <option value="elegance">🎨 優雅・藝術 / Elegance &amp; Art</option>
+                  <option value="warmth">🧡 善良・溫柔 / Kindness &amp; Gentleness</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="st-img2" class="block text-xs font-medium text-slate-600 mb-1">
+                  意象二 / Second Imagery or Trait
+                </label>
+                <select id="st-img2" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm text-ink focus:outline-none focus:ring-2 focus:ring-jade-600">
+                  <option value="default">預設：祝福・智慧・平安 / Default: Blessing, Wisdom &amp; Peace</option>
+                  <option value="calm">🍃 平靜・療癒 / Peace &amp; Healing</option>
+                  <option value="wisdom">📖 智慧・洞察 / Wisdom &amp; Insight</option>
+                  <option value="sunshine">☀️ 陽光・溫暖 / Sunlight &amp; Warmth</option>
+                  <option value="ocean">🌊 海洋・水波 / Ocean &amp; Water</option>
+                  <option value="forest">🌲 山岳・森林 / Mountain &amp; Forest</option>
+                  <option value="stars">✨ 星辰・天空 / Stars &amp; Sky</option>
+                  <option value="freedom">🕊️ 自由・遠大 / Freedom &amp; Aspiration</option>
+                  <option value="elegance">🎨 優雅・藝術 / Elegance &amp; Art</option>
+                  <option value="warmth">🧡 善良・溫柔 / Kindness &amp; Gentleness</option>
+                </select>
+              </div>
+            </div>
+
+            <button id="st-submit-btn" type="submit" class="w-full mt-2 py-3 px-4 rounded-xl bg-jade-700 hover:bg-jade-800 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+              <span>✨ 產生我的臺灣中文名 / Generate My Name in Taiwan</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Right Output Cards -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-bold text-ink">精選臺灣中文名推薦 / Curated Taiwanese Name Matches</h3>
+              <p class="text-xs text-slate-500">Screened for melodic Mandarin tones &amp; zero awkward Taiwanese homophones</p>
+            </div>
+            <button id="st-reroll-btn" type="button" class="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition">
+              🔄 重新換一組 / Regenerate
+            </button>
+          </div>
+
+          <div id="student-results" class="space-y-4">
+            <!-- Populated dynamically on load -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: TEACHER BATCH CSV MODE                                         -->
+    <!-- ===================================================================== -->
+    <section id="panel-teacher" class="hidden fade-in space-y-6">
+
+      <!-- Top Control & Upload Card -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 card-shadow">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-bold text-ink">教師批次取名工作臺 / Teacher Batch CSV Upload</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              Upload an entire class roster to assign authentic Taiwanese surnames, prevent duplicate names, filter taboo homophones, and generate English cultural stories.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button id="download-template-btn" type="button" class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+              <span>📥</span>
+              <span>Download CSV Template / 下載 CSV 範本</span>
+            </button>
+            <button id="load-sample-btn" type="button" class="px-3.5 py-2 rounded-xl bg-amberwarm-50 border border-amberwarm-200 hover:bg-amberwarm-100 text-amberwarm-700 text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+              <span>⚡</span>
+              <span>Load 8 Sample Students / 載入 8 位範例學生</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload Area + Batch Global Defaults -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-5 items-center">
+          <div class="lg:col-span-7">
+            <label id="csv-dropzone" for="csv-file-input" class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-slate-300 hover:border-jade-600 rounded-2xl bg-paper/60 hover:bg-jade-50/30 transition cursor-pointer p-4 text-center">
+              <div class="text-2xl mb-1">📄</div>
+              <p class="text-sm font-semibold text-ink">Click or Drag &amp; Drop Student <span class="text-jade-700">.CSV</span> File Here / 點擊或拖曳 CSV 至此</p>
+              <p class="text-xs text-slate-500 mt-1">Columns: <code class="bg-slate-200/70 px-1.5 py-0.5 rounded text-slate-700">Full_Name (or Original_Name), Gender, Style, Imagery_1, Imagery_2</code></p>
+              <p class="text-[11px] text-slate-400 mt-1">※ Automatically detects the Last Name initial from full names (e.g., "Liam Miller" → M) &amp; defaults blank imagery to “祝福、智慧、平安”</p>
+              <input id="csv-file-input" type="file" accept=".csv" class="hidden" />
+            </label>
+          </div>
+
+          <div class="lg:col-span-5 bg-slate-50 rounded-xl p-4 border border-slate-200/70 space-y-2.5">
+            <div class="text-xs font-bold text-ink uppercase tracking-wider">Batch Rules / 批次預設與安全機制</div>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+              <li class="flex items-start gap-1.5">
+                <span class="text-jade-600 font-bold">•</span>
+                <span><strong>Zero Duplicate Names / 全班零撞名：</strong>Automatically tracks every assigned Chinese name across your CSV so no two students share the same name.</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <span class="text-jade-600 font-bold">•</span>
+                <span><strong>Smart Defaults / 留白自動補齊：</strong>Style accepts <em>Modern</em>, <em>Classical</em>, or <em>Either / 不拘</em> (blank defaults to <em>Either</em>); empty imagery defaults to <em>Blessing, Wisdom &amp; Peace (祝福、智慧、平安)</em>.</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <span class="text-jade-600 font-bold">•</span>
+                <span><strong>Excel-Ready Export / 支援 Excel 匯出：</strong>Exports UTF-8 BOM CSV so Traditional Chinese &amp; Zhuyin open cleanly on both Mac &amp; Windows Excel.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batch Results Table Card -->
+      <div id="batch-results-wrapper" class="hidden bg-white rounded-2xl border border-slate-200/90 card-shadow overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50/70">
+          <div>
+            <h3 class="text-base font-bold text-ink flex flex-wrap items-center gap-2">
+              <span>Batch Results / 批次生成結果預覽</span>
+              <span id="batch-count-badge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-jade-100 text-jade-800">0 Students</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Click “Regenerate / 重抽” on any row to swap an individual student’s name without duplicates.</p>
+          </div>
+
+          <button id="export-csv-btn" type="button" class="px-4 py-2.5 rounded-xl bg-jade-700 hover:bg-jade-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition flex items-center justify-center gap-2">
+            <span>📤</span>
+            <span>Export Results CSV / 匯出結果 CSV</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-100/80 border-b border-slate-200 text-xs font-semibold text-slate-600">
+                <th class="py-3 px-4">#</th>
+                <th class="py-3 px-4">Full Name &amp; Detected Surname / 原文全名與姓氏</th>
+                <th class="py-3 px-4">Chinese Name / 中文名</th>
+                <th class="py-3 px-4">Pronunciation / 注音與拼音</th>
+                <th class="py-3 px-4">Style &amp; Imagery / 風格與意象</th>
+                <th class="py-3 px-4 min-w-[280px]">Cultural Story / 英文文化寓意</th>
+                <th class="py-3 px-4 text-right">Action / 微調</th>
+              </tr>
+            </thead>
+            <tbody id="batch-table-body" class="divide-y divide-slate-100 text-sm">
+              <!-- Rows injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Built-in Safety & Database Transparency Footer Note -->
+    <section class="mt-10 bg-white/70 rounded-2xl border border-slate-200/70 p-4 sm:p-5 text-xs text-slate-500">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="leading-relaxed">
+          <span class="font-bold text-slate-700">Built-in Linguistic &amp; Cultural Safeguards / 內建臺灣語言學與文化把關：</span>
+          ① Strict Taiwan Top 80 Surnames (陳, 林, 黃, 張, 李, 王, 吳, 劉, 蔡, 楊, 許, 鄭, 謝, 洪, 郭, 邱, 曾, 廖, 賴, 徐...)
+          ② Negative Character Filter (strictly excludes 笨, 痴, 癡, 幹, 死, 病, 窮, 哀, 煞...)
+          ③ Taiwanese Homophone Filter (blocks awkward combinations like 杜子騰, 史珍香, 吳理頭, 范統, 賴月京).
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. STRICT TAIWAN TOP 80 SURNAMES A-Z MAPPING DATABASE
+    // (Based on Taiwan Ministry of the Interior Official Surname Statistics —
+    //  strictly top 80 most common Taiwanese surnames)
+    // =========================================================================
+    const TAIWAN_SURNAMES = {
+      A: [
+        { char: '楊', pinyin: 'Yáng', zhuyin: 'ㄧㄤˊ', tone: 2 },
+        { char: '顏', pinyin: 'Yán', zhuyin: 'ㄧㄢˊ', tone: 2 },
+        { char: '嚴', pinyin: 'Yán', zhuyin: 'ㄧㄢˊ', tone: 2 }
+      ],
+      B: [
+        { char: '白', pinyin: 'Bái', zhuyin: 'ㄅㄞˊ', tone: 2 },
+        { char: '彭', pinyin: 'Péng', zhuyin: 'ㄆㄥˊ', tone: 2 }
+      ],
+      C: [
+        { char: '陳', pinyin: 'Chén', zhuyin: 'ㄔㄣˊ', tone: 2 },
+        { char: '蔡', pinyin: 'Cài', zhuyin: 'ㄘㄞˋ', tone: 4 },
+        { char: '張', pinyin: 'Zhāng', zhuyin: 'ㄓㄤ', tone: 1 },
+        { char: '鄭', pinyin: 'Zhèng', zhuyin: 'ㄓㄥˋ', tone: 4 },
+        { char: '鍾', pinyin: 'Zhōng', zhuyin: 'ㄓㄨㄥ', tone: 1 },
+        { char: '曹', pinyin: 'Cáo', zhuyin: 'ㄘㄠˊ', tone: 2 },
+        { char: '程', pinyin: 'Chéng', zhuyin: 'ㄔㄥˊ', tone: 2 }
+      ],
+      D: [
+        { char: '戴', pinyin: 'Dài', zhuyin: 'ㄉㄞˋ', tone: 4 },
+        { char: '鄧', pinyin: 'Dèng', zhuyin: 'ㄉㄥˋ', tone: 4 },
+        { char: '杜', pinyin: 'Dù', zhuyin: 'ㄉㄨˋ', tone: 4 },
+        { char: '丁', pinyin: 'Dīng', zhuyin: 'ㄉㄧㄥ', tone: 1 },
+        { char: '董', pinyin: 'Dǒng', zhuyin: 'ㄉㄨㄥˇ', tone: 3 }
+      ],
+      E: [
+        { char: '葉', pinyin: 'Yè', zhuyin: 'ㄧㄝˋ', tone: 4 },
+        { char: '余', pinyin: 'Yú', zhuyin: 'ㄩˊ', tone: 2 },
+        { char: '歐', pinyin: 'Ōu', zhuyin: 'ㄡ', tone: 1 },
+        { char: '嚴', pinyin: 'Yán', zhuyin: 'ㄧㄢˊ', tone: 2 }
+      ],
+      F: [
+        { char: '范', pinyin: 'Fàn', zhuyin: 'ㄈㄢˋ', tone: 4 },
+        { char: '方', pinyin: 'Fāng', zhuyin: 'ㄈㄤ', tone: 1 },
+        { char: '傅', pinyin: 'Fù', zhuyin: 'ㄈㄨˋ', tone: 4 },
+        { char: '馮', pinyin: 'Féng', zhuyin: 'ㄈㄥˊ', tone: 2 }
+      ],
+      G: [
+        { char: '郭', pinyin: 'Guō', zhuyin: 'ㄍㄨㄛ', tone: 1 },
+        { char: '高', pinyin: 'Gāo', zhuyin: 'ㄍㄠ', tone: 1 },
+        { char: '古', pinyin: 'Gǔ', zhuyin: 'ㄍㄨˇ', tone: 3 },
+        { char: '龔', pinyin: 'Gǒng', zhuyin: 'ㄍㄨㄥˇ', tone: 3 }
+      ],
+      H: [
+        { char: '黃', pinyin: 'Huáng', zhuyin: 'ㄏㄨㄤˊ', tone: 2 },
+        { char: '洪', pinyin: 'Hóng', zhuyin: 'ㄏㄨㄥˊ', tone: 2 },
+        { char: '何', pinyin: 'Hé', zhuyin: 'ㄏㄜˊ', tone: 2 },
+        { char: '胡', pinyin: 'Hú', zhuyin: 'ㄏㄨˊ', tone: 2 },
+        { char: '侯', pinyin: 'Hóu', zhuyin: 'ㄏㄡˊ', tone: 2 },
+        { char: '韓', pinyin: 'Hán', zhuyin: 'ㄏㄢˊ', tone: 2 },
+        { char: '許', pinyin: 'Xǔ', zhuyin: 'ㄒㄩˇ', tone: 3 }
+      ],
+      I: [
+        { char: '葉', pinyin: 'Yè', zhuyin: 'ㄧㄝˋ', tone: 4 },
+        { char: '游', pinyin: 'Yóu', zhuyin: 'ㄧㄡˊ', tone: 2 },
+        { char: '姚', pinyin: 'Yáo', zhuyin: 'ㄧㄠˊ', tone: 2 }
+      ],
+      J: [
+        { char: '江', pinyin: 'Jiāng', zhuyin: 'ㄐㄧㄤ', tone: 1 },
+        { char: '簡', pinyin: 'Jiǎn', zhuyin: 'ㄐㄧㄢˇ', tone: 3 },
+        { char: '蔣', pinyin: 'Jiǎng', zhuyin: 'ㄐㄧㄤˇ', tone: 3 },
+        { char: '紀', pinyin: 'Jì', zhuyin: 'ㄐㄧˋ', tone: 4 },
+        { char: '姜', pinyin: 'Jiāng', zhuyin: 'ㄐㄧㄤ', tone: 1 },
+        { char: '朱', pinyin: 'Zhū', zhuyin: 'ㄓㄨ', tone: 1 },
+        { char: '詹', pinyin: 'Zhān', zhuyin: 'ㄓㄢ', tone: 1 }
+      ],
+      K: [
+        { char: '柯', pinyin: 'Kē', zhuyin: 'ㄎㄜ', tone: 1 },
+        { char: '康', pinyin: 'Kāng', zhuyin: 'ㄎㄤ', tone: 1 },
+        { char: '高', pinyin: 'Gāo', zhuyin: 'ㄍㄠ', tone: 1 },
+        { char: '郭', pinyin: 'Guō', zhuyin: 'ㄍㄨㄛ', tone: 1 }
+      ],
+      L: [
+        { char: '林', pinyin: 'Lín', zhuyin: 'ㄌㄧㄣˊ', tone: 2 },
+        { char: '李', pinyin: 'Lǐ', zhuyin: 'ㄌㄧˇ', tone: 3 },
+        { char: '劉', pinyin: 'Liú', zhuyin: 'ㄌㄧㄡˊ', tone: 2 },
+        { char: '廖', pinyin: 'Liào', zhuyin: 'ㄌㄧㄠˋ', tone: 4 },
+        { char: '賴', pinyin: 'Lài', zhuyin: 'ㄌㄞˋ', tone: 4 },
+        { char: '呂', pinyin: 'Lǚ', zhuyin: 'ㄌㄩˇ', tone: 3 },
+        { char: '羅', pinyin: 'Luó', zhuyin: 'ㄌㄨㄛˊ', tone: 2 },
+        { char: '盧', pinyin: 'Lú', zhuyin: 'ㄌㄨˊ', tone: 2 },
+        { char: '梁', pinyin: 'Liáng', zhuyin: 'ㄌㄧㄤˊ', tone: 2 },
+        { char: '藍', pinyin: 'Lán', zhuyin: 'ㄌㄢˊ', tone: 2 },
+        { char: '連', pinyin: 'Lián', zhuyin: 'ㄌㄧㄢˊ', tone: 2 }
+      ],
+      M: [
+        { char: '馬', pinyin: 'Mǎ', zhuyin: 'ㄇㄚˇ', tone: 3 },
+        { char: '陳', pinyin: 'Chén', zhuyin: 'ㄔㄣˊ', tone: 2 },
+        { char: '林', pinyin: 'Lín', zhuyin: 'ㄌㄧㄣˊ', tone: 2 }
+      ],
+      N: [
+        { char: '藍', pinyin: 'Lán', zhuyin: 'ㄌㄢˊ', tone: 2 },
+        { char: '林', pinyin: 'Lín', zhuyin: 'ㄌㄧㄣˊ', tone: 2 },
+        { char: '羅', pinyin: 'Luó', zhuyin: 'ㄌㄨㄛˊ', tone: 2 },
+        { char: '連', pinyin: 'Lián', zhuyin: 'ㄌㄧㄢˊ', tone: 2 }
+      ],
+      O: [
+        { char: '歐', pinyin: 'Ōu', zhuyin: 'ㄡ', tone: 1 },
+        { char: '吳', pinyin: 'Wú', zhuyin: 'ㄨˊ', tone: 2 },
+        { char: '翁', pinyin: 'Wēng', zhuyin: 'ㄨㄥ', tone: 1 }
+      ],
+      P: [
+        { char: '潘', pinyin: 'Pān', zhuyin: 'ㄆㄢ', tone: 1 },
+        { char: '彭', pinyin: 'Péng', zhuyin: 'ㄆㄥˊ', tone: 2 }
+      ],
+      Q: [
+        { char: '邱', pinyin: 'Qiū', zhuyin: 'ㄑㄧㄡ', tone: 1 },
+        { char: '許', pinyin: 'Xǔ', zhuyin: 'ㄒㄩˇ', tone: 3 }
+      ],
+      R: [
+        { char: '羅', pinyin: 'Luó', zhuyin: 'ㄌㄨㄛˊ', tone: 2 },
+        { char: '賴', pinyin: 'Lài', zhuyin: 'ㄌㄞˋ', tone: 4 },
+        { char: '阮', pinyin: 'Ruǎn', zhuyin: 'ㄖㄨㄢˇ', tone: 3 }
+      ],
+      S: [
+        { char: '蘇', pinyin: 'Sū', zhuyin: 'ㄙㄨ', tone: 1 },
+        { char: '施', pinyin: 'Shī', zhuyin: 'ㄕ', tone: 1 },
+        { char: '沈', pinyin: 'Shěn', zhuyin: 'ㄕㄣˇ', tone: 3 },
+        { char: '孫', pinyin: 'Sūn', zhuyin: 'ㄙㄨㄣ', tone: 1 },
+        { char: '宋', pinyin: 'Sòng', zhuyin: 'ㄙㄨㄥˋ', tone: 4 },
+        { char: '石', pinyin: 'Shí', zhuyin: 'ㄕˊ', tone: 2 },
+        { char: '薛', pinyin: 'Xuē', zhuyin: 'ㄒㄩㄝ', tone: 1 },
+        { char: '蕭', pinyin: 'Xiāo', zhuyin: 'ㄒㄧㄠ', tone: 1 }
+      ],
+      T: [
+        { char: '唐', pinyin: 'Táng', zhuyin: 'ㄊㄤˊ', tone: 2 },
+        { char: '湯', pinyin: 'Tāng', zhuyin: 'ㄊㄤ', tone: 1 },
+        { char: '田', pinyin: 'Tián', zhuyin: 'ㄊㄧㄢˊ', tone: 2 },
+        { char: '卓', pinyin: 'Zhuó', zhuyin: 'ㄓㄨㄛˊ', tone: 2 },
+        { char: '丁', pinyin: 'Dīng', zhuyin: 'ㄉㄧㄥ', tone: 1 }
+      ],
+      U: [
+        { char: '游', pinyin: 'Yóu', zhuyin: 'ㄧㄡˊ', tone: 2 },
+        { char: '余', pinyin: 'Yú', zhuyin: 'ㄩˊ', tone: 2 },
+        { char: '尤', pinyin: 'Yóu', zhuyin: 'ㄧㄡˊ', tone: 2 }
+      ],
+      V: [
+        { char: '魏', pinyin: 'Wèi', zhuyin: 'ㄨㄟˋ', tone: 4 },
+        { char: '王', pinyin: 'Wáng', zhuyin: 'ㄨㄤˊ', tone: 2 },
+        { char: '溫', pinyin: 'Wēn', zhuyin: 'ㄨㄣ', tone: 1 }
+      ],
+      W: [
+        { char: '王', pinyin: 'Wáng', zhuyin: 'ㄨㄤˊ', tone: 2 },
+        { char: '吳', pinyin: 'Wú', zhuyin: 'ㄨˊ', tone: 2 },
+        { char: '魏', pinyin: 'Wèi', zhuyin: 'ㄨㄟˋ', tone: 4 },
+        { char: '溫', pinyin: 'Wēn', zhuyin: 'ㄨㄣ', tone: 1 },
+        { char: '汪', pinyin: 'Wāng', zhuyin: 'ㄨㄤ', tone: 1 },
+        { char: '翁', pinyin: 'Wēng', zhuyin: 'ㄨㄥ', tone: 1 }
+      ],
+      X: [
+        { char: '許', pinyin: 'Xǔ', zhuyin: 'ㄒㄩˇ', tone: 3 },
+        { char: '謝', pinyin: 'Xiè', zhuyin: 'ㄒㄧㄝˋ', tone: 4 },
+        { char: '徐', pinyin: 'Xú', zhuyin: 'ㄒㄩˊ', tone: 2 },
+        { char: '蕭', pinyin: 'Xiāo', zhuyin: 'ㄒㄧㄠ', tone: 1 },
+        { char: '薛', pinyin: 'Xuē', zhuyin: 'ㄒㄩㄝ', tone: 1 }
+      ],
+      Y: [
+        { char: '楊', pinyin: 'Yáng', zhuyin: 'ㄧㄤˊ', tone: 2 },
+        { char: '葉', pinyin: 'Yè', zhuyin: 'ㄧㄝˋ', tone: 4 },
+        { char: '游', pinyin: 'Yóu', zhuyin: 'ㄧㄡˊ', tone: 2 },
+        { char: '余', pinyin: 'Yú', zhuyin: 'ㄩˊ', tone: 2 },
+        { char: '顏', pinyin: 'Yán', zhuyin: 'ㄧㄢˊ', tone: 2 },
+        { char: '姚', pinyin: 'Yáo', zhuyin: 'ㄧㄠˊ', tone: 2 },
+        { char: '嚴', pinyin: 'Yán', zhuyin: 'ㄧㄢˊ', tone: 2 },
+        { char: '袁', pinyin: 'Yuán', zhuyin: 'ㄩㄢˊ', tone: 2 },
+        { char: '尤', pinyin: 'Yóu', zhuyin: 'ㄧㄡˊ', tone: 2 }
+      ],
+      Z: [
+        { char: '張', pinyin: 'Zhāng', zhuyin: 'ㄓㄤ', tone: 1 },
+        { char: '鄭', pinyin: 'Zhèng', zhuyin: 'ㄓㄥˋ', tone: 4 },
+        { char: '曾', pinyin: 'Zēng', zhuyin: 'ㄗㄥ', tone: 1 },
+        { char: '周', pinyin: 'Zhōu', zhuyin: 'ㄓㄡ', tone: 1 },
+        { char: '莊', pinyin: 'Zhuāng', zhuyin: 'ㄓㄨㄤ', tone: 1 },
+        { char: '朱', pinyin: 'Zhū', zhuyin: 'ㄓㄨ', tone: 1 },
+        { char: '鍾', pinyin: 'Zhōng', zhuyin: 'ㄓㄨㄥ', tone: 1 },
+        { char: '詹', pinyin: 'Zhān', zhuyin: 'ㄓㄢ', tone: 1 },
+        { char: '趙', pinyin: 'Zhào', zhuyin: 'ㄓㄠˋ', tone: 4 },
+        { char: '卓', pinyin: 'Zhuó', zhuyin: 'ㄓㄨㄛˊ', tone: 2 },
+        { char: '鄒', pinyin: 'Zōu', zhuyin: 'ㄗㄡ', tone: 1 }
+      ]
+    };
+
+    // =========================================================================
+    // 2. IMAGERY LABELS & CURATED CHARACTER DATABASE (MODERN & CLASSICAL)
+    // =========================================================================
+    const IMAGERY_LABELS = {
+      default:  { zh: '祝福・智慧・平安', en: 'Blessing, Wisdom & Peace' },
+      sunshine: { zh: '陽光・溫暖', en: 'Sunlight & Warmth' },
+      ocean:    { zh: '海洋・水波', en: 'Ocean & Water' },
+      forest:   { zh: '山岳・森林', en: 'Mountain & Forest' },
+      stars:    { zh: '星辰・天空', en: 'Stars & Sky' },
+      calm:     { zh: '平靜・療癒', en: 'Peace & Healing' },
+      wisdom:   { zh: '智慧・洞察', en: 'Wisdom & Insight' },
+      freedom:  { zh: '自由・遠大', en: 'Freedom & Aspiration' },
+      elegance: { zh: '優雅・藝術', en: 'Elegance & Art' },
+      warmth:   { zh: '善良・溫柔', en: 'Kindness & Gentleness' }
+    };
+
+    const CHAR_DATABASE = [
+      // Modern Taiwanese Aesthetic (現代臺灣文青風)
+      { char: '晴', pinyin: 'qíng', zhuyin: 'ㄑㄧㄥˊ', tone: 2, gender: 'F', style: 'modern', tags: ['sunshine', 'calm', 'default'], meaning: 'clear sunny sky & optimism' },
+      { char: '煦', pinyin: 'xù', zhuyin: 'ㄒㄩˋ', tone: 4, gender: 'N', style: 'modern', tags: ['sunshine', 'warmth', 'default'], meaning: 'gentle morning warmth' },
+      { char: '晨', pinyin: 'chén', zhuyin: 'ㄔㄣˊ', tone: 2, gender: 'N', style: 'modern', tags: ['sunshine', 'stars', 'freedom'], meaning: 'fresh dawn & new beginnings' },
+      { char: '曦', pinyin: 'xī', zhuyin: 'ㄒㄧ', tone: 1, gender: 'N', style: 'modern', tags: ['sunshine', 'stars'], meaning: 'first light of daybreak' },
+      { char: '陽', pinyin: 'yáng', zhuyin: 'ㄧㄤˊ', tone: 2, gender: 'M', style: 'modern', tags: ['sunshine', 'warmth', 'freedom'], meaning: 'radiant sunlight & vitality' },
+      { char: '安', pinyin: 'ān', zhuyin: 'ㄢ', tone: 1, gender: 'N', style: 'modern', tags: ['calm', 'default', 'warmth'], meaning: 'peace, serenity & safety' },
+      { char: '寧', pinyin: 'níng', zhuyin: 'ㄋㄧㄥˊ', tone: 2, gender: 'N', style: 'modern', tags: ['calm', 'default'], meaning: 'tranquil & grounded heart' },
+      { char: '恬', pinyin: 'tián', zhuyin: 'ㄊㄧㄢˊ', tone: 2, gender: 'F', style: 'modern', tags: ['calm', 'warmth', 'elegance'], meaning: 'quiet contentment & grace' },
+      { char: '靜', pinyin: 'jìng', zhuyin: 'ㄐㄧㄥˋ', tone: 4, gender: 'F', style: 'modern', tags: ['calm', 'wisdom'], meaning: 'stillness & inner clarity' },
+      { char: '宇', pinyin: 'yǔ', zhuyin: 'ㄩˇ', tone: 3, gender: 'M', style: 'modern', tags: ['stars', 'freedom', 'default'], meaning: 'vast sky & boundless vision' },
+      { char: '宙', pinyin: 'zhòu', zhuyin: 'ㄓㄡˋ', tone: 4, gender: 'M', style: 'modern', tags: ['stars', 'freedom'], meaning: 'timeless expanse & depth' },
+      { char: '星', pinyin: 'xīng', zhuyin: 'ㄒㄧㄥ', tone: 1, gender: 'N', style: 'modern', tags: ['stars', 'sunshine', 'elegance'], meaning: 'bright starlight & inspiration' },
+      { char: '希', pinyin: 'xī', zhuyin: 'ㄒㄧ', tone: 1, gender: 'N', style: 'modern', tags: ['default', 'sunshine', 'freedom'], meaning: 'hope & luminous promise' },
+      { char: '宥', pinyin: 'yòu', zhuyin: 'ㄧㄡˋ', tone: 4, gender: 'N', style: 'modern', tags: ['warmth', 'default', 'calm'], meaning: 'generosity & forgiving kindness' },
+      { char: '恩', pinyin: 'ēn', zhuyin: 'ㄣ', tone: 1, gender: 'N', style: 'modern', tags: ['warmth', 'default'], meaning: 'grace, gratitude & blessing' },
+      { char: '暖', pinyin: 'nuǎn', zhuyin: 'ㄋㄨㄢˇ', tone: 3, gender: 'F', style: 'modern', tags: ['warmth', 'sunshine'], meaning: 'heartfelt warmth & comfort' },
+      { char: '慈', pinyin: 'cí', zhuyin: 'ㄘˊ', tone: 2, gender: 'F', style: 'modern', tags: ['warmth', 'calm', 'default'], meaning: 'compassion & gentle care' },
+      { char: '品', pinyin: 'pǐn', zhuyin: 'ㄆㄧㄣˇ', tone: 3, gender: 'N', style: 'modern', tags: ['elegance', 'wisdom', 'default'], meaning: 'refined character & integrity' },
+      { char: '睿', pinyin: 'ruì', zhuyin: 'ㄖㄨㄟˋ', tone: 4, gender: 'M', style: 'modern', tags: ['wisdom', 'default'], meaning: 'sharp insight & wisdom' },
+      { char: '哲', pinyin: 'zhé', zhuyin: 'ㄓㄜˊ', tone: 2, gender: 'M', style: 'modern', tags: ['wisdom', 'default'], meaning: 'thoughtful intellect & discernment' },
+      { char: '思', pinyin: 'sī', zhuyin: 'ㄙ', tone: 1, gender: 'N', style: 'modern', tags: ['wisdom', 'elegance', 'calm'], meaning: 'reflective mind & creativity' },
+      { char: '明', pinyin: 'míng', zhuyin: 'ㄇㄧㄥˊ', tone: 2, gender: 'N', style: 'modern', tags: ['wisdom', 'sunshine', 'default'], meaning: 'clarity, brightness & understanding' },
+      { char: '柏', pinyin: 'bó', zhuyin: 'ㄅㄛˊ', tone: 2, gender: 'M', style: 'modern', tags: ['forest', 'calm', 'default'], meaning: 'resilient cypress & steadfast strength' },
+      { char: '森', pinyin: 'sēn', zhuyin: 'ㄙㄣ', tone: 1, gender: 'M', style: 'modern', tags: ['forest', 'calm'], meaning: 'lush forest & flourishing vitality' },
+      { char: '禾', pinyin: 'hé', zhuyin: 'ㄏㄜˊ', tone: 2, gender: 'N', style: 'modern', tags: ['forest', 'warmth', 'default'], meaning: 'golden harvest & gentle abundance' },
+      { char: '芸', pinyin: 'yún', zhuyin: 'ㄩㄣˊ', tone: 2, gender: 'F', style: 'modern', tags: ['forest', 'elegance'], meaning: 'fragrant herb & literary charm' },
+      { char: '桐', pinyin: 'tóng', zhuyin: 'ㄊㄨㄥˊ', tone: 2, gender: 'N', style: 'modern', tags: ['forest', 'elegance'], meaning: 'Taiwanese tung blossom & grace' },
+      { char: '岳', pinyin: 'yuè', zhuyin: 'ㄩㄝˋ', tone: 4, gender: 'M', style: 'modern', tags: ['forest', 'freedom'], meaning: 'majestic mountain & steady resolve' },
+      { char: '涵', pinyin: 'hán', zhuyin: 'ㄏㄢˊ', tone: 2, gender: 'F', style: 'modern', tags: ['ocean', 'wisdom', 'elegance'], meaning: 'deep waters & cultivated poise' },
+      { char: '沛', pinyin: 'pèi', zhuyin: 'ㄆㄟˋ', tone: 4, gender: 'N', style: 'modern', tags: ['ocean', 'freedom'], meaning: 'abundant flow & energetic spirit' },
+      { char: '洋', pinyin: 'yáng', zhuyin: 'ㄧㄤˊ', tone: 2, gender: 'M', style: 'modern', tags: ['ocean', 'freedom'], meaning: 'open ocean & global horizon' },
+      { char: '汐', pinyin: 'xì', zhuyin: 'ㄒㄧˋ', tone: 4, gender: 'F', style: 'modern', tags: ['ocean', 'calm', 'elegance'], meaning: 'gentle evening tide' },
+      { char: '翔', pinyin: 'xiáng', zhuyin: 'ㄒㄧㄤˊ', tone: 2, gender: 'M', style: 'modern', tags: ['freedom', 'stars'], meaning: 'soaring freely with ambition' },
+      { char: '航', pinyin: 'háng', zhuyin: 'ㄏㄤˊ', tone: 2, gender: 'M', style: 'modern', tags: ['freedom', 'ocean'], meaning: 'bold voyage & steady navigation' },
+      { char: '遠', pinyin: 'yuǎn', zhuyin: 'ㄩㄢˇ', tone: 3, gender: 'N', style: 'modern', tags: ['freedom', 'wisdom'], meaning: 'far-reaching vision & aspiration' },
+      { char: '詠', pinyin: 'yǒng', zhuyin: 'ㄩㄥˇ', tone: 3, gender: 'F', style: 'modern', tags: ['elegance', 'warmth'], meaning: 'melodic poetry & joyful expression' },
+      { char: '妍', pinyin: 'yán', zhuyin: 'ㄧㄢˊ', tone: 2, gender: 'F', style: 'modern', tags: ['elegance', 'sunshine'], meaning: 'radiant beauty & graceful poise' },
+      { char: '嘉', pinyin: 'jiā', zhuyin: 'ㄐㄧㄚ', tone: 1, gender: 'N', style: 'modern', tags: ['default', 'warmth', 'elegance'], meaning: 'excellence, blessing & praise' },
+      { char: '祐', pinyin: 'yòu', zhuyin: 'ㄧㄡˋ', tone: 4, gender: 'M', style: 'modern', tags: ['default', 'calm'], meaning: 'blessed protection & good fortune' },
+      { char: '樂', pinyin: 'lè', zhuyin: 'ㄌㄜˋ', tone: 4, gender: 'N', style: 'modern', tags: ['sunshine', 'warmth', 'default'], meaning: 'joyful spirit & music' },
+
+      // Classical Poetry & Literature (古典詩詞底蘊風)
+      { char: '清', pinyin: 'qīng', zhuyin: 'ㄑㄧㄥ', tone: 1, gender: 'N', style: 'classical', tags: ['ocean', 'calm', 'elegance', 'default'], meaning: 'pure crystal stream & clarity' },
+      { char: '疏', pinyin: 'shū', zhuyin: 'ㄕㄨ', tone: 1, gender: 'N', style: 'classical', tags: ['elegance', 'calm', 'forest'], meaning: 'unhurried poetic grace' },
+      { char: '望', pinyin: 'wàng', zhuyin: 'ㄨㄤˋ', tone: 4, gender: 'M', style: 'classical', tags: ['stars', 'freedom', 'wisdom'], meaning: 'gazing afar with noble hope' },
+      { char: '舒', pinyin: 'shū', zhuyin: 'ㄕㄨ', tone: 1, gender: 'F', style: 'classical', tags: ['calm', 'elegance', 'warmth'], meaning: 'unfolding ease & gentle poise' },
+      { char: '晏', pinyin: 'yàn', zhuyin: 'ㄧㄢˋ', tone: 4, gender: 'N', style: 'classical', tags: ['calm', 'sunshine', 'default'], meaning: 'serene clear sky & peaceful era' },
+      { char: '川', pinyin: 'chuān', zhuyin: 'ㄔㄨㄢ', tone: 1, gender: 'M', style: 'classical', tags: ['ocean', 'freedom', 'forest'], meaning: 'flowing river & open-minded breadth' },
+      { char: '舟', pinyin: 'zhōu', zhuyin: 'ㄓㄡ', tone: 1, gender: 'M', style: 'classical', tags: ['ocean', 'freedom', 'calm'], meaning: 'poetic boat drifting across misty waters' },
+      { char: '白', pinyin: 'bái', zhuyin: 'ㄅㄞˊ', tone: 2, gender: 'N', style: 'classical', tags: ['elegance', 'stars', 'calm'], meaning: 'pure clarity & literary spirit' },
+      { char: '言', pinyin: 'yán', zhuyin: 'ㄧㄢˊ', tone: 2, gender: 'N', style: 'classical', tags: ['wisdom', 'elegance', 'default'], meaning: 'eloquent words & sincerity' },
+      { char: '知', pinyin: 'zhī', zhuyin: 'ㄓ', tone: 1, gender: 'N', style: 'classical', tags: ['wisdom', 'default'], meaning: 'deep understanding & scholarly insight' },
+      { char: '嵐', pinyin: 'lán', zhuyin: 'ㄌㄢˊ', tone: 2, gender: 'F', style: 'classical', tags: ['forest', 'elegance', 'calm'], meaning: 'soft mountain mist at dawn' },
+      { char: '青', pinyin: 'qīng', zhuyin: 'ㄑㄧㄥ', tone: 1, gender: 'N', style: 'classical', tags: ['forest', 'sunshine', 'freedom'], meaning: 'verdant spring & youthful vigor' },
+      { char: '竹', pinyin: 'zhú', zhuyin: 'ㄓㄨˊ', tone: 2, gender: 'N', style: 'classical', tags: ['forest', 'elegance', 'wisdom'], meaning: 'upright bamboo & quiet resilience' },
+      { char: '楓', pinyin: 'fēng', zhuyin: 'ㄈㄥ', tone: 1, gender: 'N', style: 'classical', tags: ['forest', 'warmth'], meaning: 'autumn maple & poetic warmth' },
+      { char: '墨', pinyin: 'mò', zhuyin: 'ㄇㄛˋ', tone: 4, gender: 'M', style: 'classical', tags: ['elegance', 'wisdom'], meaning: 'calligraphy ink & artistic depth' },
+      { char: '書', pinyin: 'shū', zhuyin: 'ㄕㄨ', tone: 1, gender: 'N', style: 'classical', tags: ['wisdom', 'elegance', 'default'], meaning: 'scholarly grace & lifelong learning' },
+      { char: '琴', pinyin: 'qín', zhuyin: 'ㄑㄧㄣˊ', tone: 2, gender: 'F', style: 'classical', tags: ['elegance', 'calm'], meaning: 'classical zither & lyrical harmony' },
+      { char: '韻', pinyin: 'yùn', zhuyin: 'ㄩㄣˋ', tone: 4, gender: 'F', style: 'classical', tags: ['elegance', 'warmth'], meaning: 'lingering poetic rhythm & charm' },
+      { char: '月', pinyin: 'yuè', zhuyin: 'ㄩㄝˋ', tone: 4, gender: 'F', style: 'classical', tags: ['stars', 'calm', 'elegance'], meaning: 'luminous moonlight & serenity' },
+      { char: '雲', pinyin: 'yún', zhuyin: 'ㄩㄣˊ', tone: 2, gender: 'N', style: 'classical', tags: ['stars', 'freedom', 'calm'], meaning: 'free-drifting clouds & ease' },
+      { char: '景', pinyin: 'jǐng', zhuyin: 'ㄐㄧㄥˇ', tone: 3, gender: 'M', style: 'classical', tags: ['sunshine', 'stars', 'default'], meaning: 'bright vista & admirable character' },
+      { char: '昭', pinyin: 'zhāo', zhuyin: 'ㄓㄠ', tone: 1, gender: 'N', style: 'classical', tags: ['sunshine', 'wisdom', 'default'], meaning: 'luminous clarity & noble warmth' },
+      { char: '懷', pinyin: 'huái', zhuyin: 'ㄏㄨㄞˊ', tone: 2, gender: 'M', style: 'classical', tags: ['warmth', 'wisdom', 'freedom'], meaning: 'generous heart & deep empathy' },
+      { char: '柔', pinyin: 'róu', zhuyin: 'ㄖㄡˊ', tone: 2, gender: 'F', style: 'classical', tags: ['warmth', 'calm', 'elegance'], meaning: 'gentle strength & warmth' },
+      { char: '澤', pinyin: 'zé', zhuyin: 'ㄗㄜˊ', tone: 2, gender: 'M', style: 'classical', tags: ['ocean', 'warmth', 'default'], meaning: 'nourishing spring & kindness' },
+      { char: '瀾', pinyin: 'lán', zhuyin: 'ㄌㄢˊ', tone: 2, gender: 'N', style: 'classical', tags: ['ocean', 'freedom'], meaning: 'graceful waves & expansive spirit' },
+      { char: '溪', pinyin: 'xī', zhuyin: 'ㄒㄧ', tone: 1, gender: 'F', style: 'classical', tags: ['ocean', 'calm', 'forest'], meaning: 'clear mountain brook' },
+      { char: '和', pinyin: 'hé', zhuyin: 'ㄏㄜˊ', tone: 2, gender: 'N', style: 'classical', tags: ['calm', 'warmth', 'default'], meaning: 'gentle harmony & peace' },
+      { char: '謙', pinyin: 'qiān', zhuyin: 'ㄑㄧㄢ', tone: 1, gender: 'M', style: 'classical', tags: ['wisdom', 'warmth', 'default'], meaning: 'humble wisdom & quiet dignity' },
+      { char: '婉', pinyin: 'wǎn', zhuyin: 'ㄨㄢˇ', tone: 3, gender: 'F', style: 'classical', tags: ['elegance', 'warmth', 'calm'], meaning: 'gracious elegance & tenderness' }
+    ];
+
+    // =========================================================================
+    // 3. SAFETY FILTERS: TABOO CHARACTERS & TAIWANESE HOMOPHONE BLACKLIST
+    // =========================================================================
+    const TABOO_CHARS = new Set([
+      '笨', '痴', '癡', '幹', '死', '病', '窮', '哀', '煞', '蠢',
+      '爛', '賤', '滾', '屎', '尿', '鬼', '醜', '敗', '亡', '殺',
+      '痛', '苦', '慘', '廢', '臭'
+    ]);
+
+    const HOMOPHONE_BLACKLIST = [
+      'duziteng', 'shizhenxiang', 'wulitou', 'fantong', 'laiyuejing',
+      'yangwei', 'baichi', 'bendan', 'shabi', 'ganma', 'chishi',
+      'fangpi', 'sidiao', 'wuneng', 'baimang', 'shizhi', 'duzi'
+    ];
+
+    // =========================================================================
+    // 4. STATE & UTILITY HELPERS
+    // =========================================================================
+    let savedGeminiApiKey = '';
+    let batchResultsData = [];
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      const msgEl = document.getElementById('toast-msg');
+      icon.textContent = isError ? '⚠' : '✓';
+      icon.className = isError ? 'text-amber-300 font-bold' : 'text-jade-100 font-bold';
+      msgEl.textContent = msg;
+      toast.classList.remove('hidden');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function stripToneMarks(str) {
+      return String(str || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/ü/gi, 'u')
+        .replace(/[^a-zA-Z]/g, '')
+        .toLowerCase();
+    }
+
+    // Smart Last Name extractor supporting "Liam Miller", "Miller, Sarah", "van der Berg", "O'Connor", etc.
+    function extractLastNameInfo(rawName) {
+      const cleaned = String(rawName || '').trim().replace(/\s+/g, ' ');
+      if (!cleaned) {
+        return {
+          fullName: 'Student',
+          lastName: 'Student',
+          initial: 'S',
+          isSingleWord: true,
+          previewSurnames: TAIWAN_SURNAMES.S.slice(0, 4).map(s => s.char).join('、')
+        };
+      }
+
+      let lastName = '';
+      let isSingleWord = false;
+
+      if (cleaned.includes(',')) {
+        // Format: "Miller, Sarah"
+        lastName = cleaned.split(',')[0].trim();
+      } else {
+        const prefixes = new Set(['mr', 'mrs', 'ms', 'miss', 'dr', 'prof', 'sir']);
+        const suffixes = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'phd', 'md']);
+        const particles = new Set(['van', 'von', 'de', 'del', 'della', 'da', 'di', 'la', 'le', 'du', 'der', 'den', 'st', 'saint']);
+
+        let tokens = cleaned.split(' ').filter(Boolean);
+        while (tokens.length > 1 && prefixes.has(tokens[0].replace(/\./g, '').toLowerCase())) {
+          tokens.shift();
+        }
+        while (tokens.length > 1 && suffixes.has(tokens[tokens.length - 1].replace(/\./g, '').toLowerCase())) {
+          tokens.pop();
+        }
+
+        if (tokens.length === 1) {
+          isSingleWord = true;
+          lastName = tokens[0];
+        } else {
+          // Check for compound surname particles (e.g., "van der Berg", "De La Cruz")
+          let startIdx = tokens.length - 1;
+          while (startIdx > 1 && particles.has(tokens[startIdx - 1].replace(/\./g, '').toLowerCase())) {
+            startIdx--;
+          }
+          lastName = tokens.slice(startIdx).join(' ');
+        }
+      }
+
+      const letterMatch = lastName.match(/[A-Za-z]/);
+      const initial = letterMatch ? letterMatch[0].toUpperCase() : 'C';
+      const surnameList = TAIWAN_SURNAMES[initial] || TAIWAN_SURNAMES.C;
+      const previewSurnames = surnameList.slice(0, 4).map(s => s.char).join('、');
+
+      return {
+        fullName: cleaned,
+        lastName,
+        initial,
+        isSingleWord,
+        previewSurnames
+      };
+    }
+
+    function getStyleBadgeInfo(effectiveStyle) {
+      if (effectiveStyle === 'classical') {
+        return {
+          badge: '📜 古典詩詞底蘊風 / Classical Poetry',
+          short: '古典詩詞 / Classical',
+          exportLabel: 'Classical Poetry & Literature (古典詩詞底蘊風)',
+          promptLabel: 'Classical Poetry & Literature'
+        };
+      }
+      if (effectiveStyle === 'mix') {
+        return {
+          badge: '✨ 古今交融風 / Modern & Classical Blend',
+          short: '古今交融 / Blended',
+          exportLabel: 'Modern & Classical Blend (古今交融風)',
+          promptLabel: 'Modern Taiwanese & Classical Poetry Blend'
+        };
+      }
+      return {
+        badge: '🌿 現代臺灣文青風 / Modern Taiwanese',
+        short: '現代文青 / Modern',
+        exportLabel: 'Modern Taiwanese Aesthetic (現代臺灣文青風)',
+        promptLabel: 'Modern Taiwanese Aesthetic'
+      };
+    }
+
+    function isSafeCombination(surnameObj, c1, c2) {
+      if (!surnameObj || !c1 || !c2) return false;
+      if (c1.char === c2.char || surnameObj.char === c1.char || surnameObj.char === c2.char) return false;
+      if (TABOO_CHARS.has(c1.char) || TABOO_CHARS.has(c2.char)) return false;
+
+      // Avoid awkward Mandarin tone runs (all 3rd tones or all 3 identical tones)
+      if (surnameObj.tone === 3 && c1.tone === 3 && c2.tone === 3) return false;
+      if (surnameObj.tone === c1.tone && c1.tone === c2.tone) return false;
+
+      // Homophone check
+      const combinedPinyin = stripToneMarks(surnameObj.pinyin) + stripToneMarks(c1.pinyin) + stripToneMarks(c2.pinyin);
+      const givenPinyin = stripToneMarks(c1.pinyin) + stripToneMarks(c2.pinyin);
+      for (const bad of HOMOPHONE_BLACKLIST) {
+        if (combinedPinyin.includes(bad) || givenPinyin.includes(bad)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function filterCharPool(gender, style, imageryTag) {
+      const genderAllowed = (g) => {
+        if (gender === 'M') return g === 'M' || g === 'N';
+        if (gender === 'F') return g === 'F' || g === 'N';
+        return true; // Gender-Neutral accepts N, M, F (weighted toward N below)
+      };
+
+      const styleAllowed = (s) => {
+        if (style === 'modern') return s === 'modern';
+        if (style === 'classical') return s === 'classical';
+        return true;
+      };
+
+      let pool = CHAR_DATABASE.filter(item =>
+        genderAllowed(item.gender) &&
+        styleAllowed(item.style) &&
+        item.tags.includes(imageryTag)
+      );
+
+      if (pool.length < 3) {
+        pool = CHAR_DATABASE.filter(item =>
+          genderAllowed(item.gender) &&
+          styleAllowed(item.style)
+        );
+      }
+
+      // For gender-neutral preference, prioritize N characters when available
+      if (gender === 'N') {
+        const neutralOnly = pool.filter(item => item.gender === 'N');
+        if (neutralOnly.length >= 3) {
+          return neutralOnly;
+        }
+      }
+      return pool;
+    }
+
+    function randomPick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function buildEnglishNarrative(item) {
+      const styleInfo = getStyleBadgeInfo(item.effectiveStyle);
+      const img1Obj = IMAGERY_LABELS[item.img1] || IMAGERY_LABELS.default;
+      const img2Obj = IMAGERY_LABELS[item.img2] || IMAGERY_LABELS.default;
+      const surnameSource = item.lastNameInfo.isSingleWord
+        ? `the initial "${item.lastNameInfo.initial}" of "${item.lastNameInfo.fullName}"`
+        : `the initial "${item.lastNameInfo.initial}" of the family name "${item.lastNameInfo.lastName}"`;
+
+      const imageryPhrase = item.img1 === item.img2
+        ? img1Obj.en.toLowerCase()
+        : `${img1Obj.en.toLowerCase()} and ${img2Obj.en.toLowerCase()}`;
+
+      return `Inspired by ${surnameSource}, the authentic Taiwanese surname ${item.surname.char} (${item.surname.pinyin}) anchors this name in everyday life in Taiwan. Paired in a ${styleInfo.promptLabel} voice, ${item.char1.char} (${item.char1.pinyin}) evokes ${item.char1.meaning}, while ${item.char2.char} (${item.char2.pinyin}) symbolizes ${item.char2.meaning}—bringing together ${imageryPhrase} in a natural, melodic Taiwanese Mandarin name.`;
+    }
+
+    function generateSingleCandidate(fullName, gender, style, img1, img2, usedNamesSet = new Set(), forceStyle = null) {
+      const lastNameInfo = extractLastNameInfo(fullName);
+      const surnamePool = TAIWAN_SURNAMES[lastNameInfo.initial] || TAIWAN_SURNAMES.C;
+      const targetStyle = forceStyle || style;
+
+      let pool1, pool2;
+      if (targetStyle === 'mix') {
+        pool1 = filterCharPool(gender, 'modern', img1);
+        pool2 = filterCharPool(gender, 'classical', img2);
+      } else {
+        pool1 = filterCharPool(gender, targetStyle, img1);
+        pool2 = filterCharPool(gender, targetStyle, img2);
+      }
+
+      let chosen = null;
+      for (let attempt = 0; attempt < 120; attempt++) {
+        const surname = randomPick(surnamePool);
+        const c1 = randomPick(pool1);
+        const c2 = randomPick(pool2);
+        const chineseName = `${surname.char}${c1.char}${c2.char}`;
+
+        if (!isSafeCombination(surname, c1, c2)) continue;
+        if (usedNamesSet.has(chineseName)) continue;
+
+        let effectiveStyle = targetStyle;
+        if (targetStyle === 'either') {
+          effectiveStyle = c1.style === c2.style ? c1.style : 'mix';
+        }
+
+        chosen = {
+          fullNameInput: lastNameInfo.fullName,
+          lastNameInfo,
+          gender,
+          requestedStyle: style,
+          effectiveStyle,
+          img1,
+          img2,
+          surname,
+          char1: c1,
+          char2: c2,
+          chineseName,
+          fullPinyin: `${surname.pinyin} ${c1.pinyin}${c2.pinyin}`,
+          fullZhuyin: `${surname.zhuyin} ${c1.zhuyin} ${c2.zhuyin}`,
+          tonePattern: `${surname.tone}聲 → ${c1.tone}聲 → ${c2.tone}聲 (Tones ${surname.tone}-${c1.tone}-${c2.tone})`
+        };
+        chosen.narrative = buildEnglishNarrative(chosen);
+        break;
+      }
+
+      // Fallback if strict attempt loop couldn't avoid a collision
+      if (!chosen) {
+        const surname = surnamePool[0];
+        const fallbackPool = CHAR_DATABASE.filter(c => !TABOO_CHARS.has(c.char));
+        const c1 = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+        const c2 = fallbackPool.find(c => c.char !== c1.char && c.char !== surname.char) || fallbackPool[1];
+        const effectiveStyle = c1.style === c2.style ? c1.style : 'mix';
+        chosen = {
+          fullNameInput: lastNameInfo.fullName,
+          lastNameInfo,
+          gender,
+          requestedStyle: style,
+          effectiveStyle,
+          img1,
+          img2,
+          surname,
+          char1: c1,
+          char2: c2,
+          chineseName: `${surname.char}${c1.char}${c2.char}`,
+          fullPinyin: `${surname.pinyin} ${c1.pinyin}${c2.pinyin}`,
+          fullZhuyin: `${surname.zhuyin} ${c1.zhuyin} ${c2.zhuyin}`,
+          tonePattern: `${surname.tone}聲 → ${c1.tone}聲 → ${c2.tone}聲 (Tones ${surname.tone}-${c1.tone}-${c2.tone})`
+        };
+        chosen.narrative = buildEnglishNarrative(chosen);
+      }
+
+      return chosen;
+    }
+
+    function generateStudentCandidates(fullName, gender, style, img1, img2) {
+      const used = new Set();
+      const results = [];
+      const plan = style === 'either'
+        ? ['modern', 'classical', 'mix']
+        : [style, style, style];
+
+      for (const stepStyle of plan) {
+        const candidate = generateSingleCandidate(fullName, gender, style, img1, img2, used, stepStyle);
+        used.add(candidate.chineseName);
+        results.push(candidate);
+      }
+      return results;
+    }
+
+    async function enhanceWithGeminiIfConfigured(candidates) {
+      if (!savedGeminiApiKey) return candidates;
+      try {
+        const promptList = candidates.map((c, idx) =>
+          `${idx + 1}. ${c.chineseName} (${c.fullPinyin}) for "${c.fullNameInput}" — Surname ${c.surname.char} (from "${c.lastNameInfo.lastName}"), ${c.char1.char} (${c.char1.meaning}), ${c.char2.char} (${c.char2.meaning}).`
+        ).join('\n');
+
+        const prompt = `You are a warm Taiwanese Mandarin teacher. Write a 2-sentence poetic, culturally authentic English story for each of the following 3 Taiwanese Mandarin names. Return ONLY a JSON array of 3 strings in the exact same order.\n\n${promptList}`;
+
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(savedGeminiApiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        });
+
+        if (!resp.ok) throw new Error('Gemini API error');
+        const data = await resp.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(rawText);
+        if (Array.isArray(parsed) && parsed.length === candidates.length) {
+          parsed.forEach((story, i) => {
+            if (typeof story === 'string' && story.trim()) {
+              candidates[i].narrative = story.trim();
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Gemini enhancement skipped, using built-in narrative:', err);
+      }
+      return candidates;
+    }
+
+    // =========================================================================
+    // 5. UI INTERACTIONS: HEADER API DRAWER & TABS
+    // =========================================================================
+    document.getElementById('toggle-api-btn').addEventListener('click', () => {
+      document.getElementById('api-drawer').classList.toggle('hidden');
+    });
+
+    document.getElementById('save-api-btn').addEventListener('click', () => {
+      const key = document.getElementById('gemini-api-key').value.trim();
+      savedGeminiApiKey = key;
+      const statusLabel = document.getElementById('api-status-label');
+      if (key) {
+        statusLabel.textContent = 'Engine / 引擎：Gemini AI Enhanced';
+        showToast('Gemini API Key applied / 已啟用 AI 潤飾引擎');
+      } else {
+        statusLabel.textContent = 'Engine / 引擎：Built-in Offline (免設定)';
+        showToast('Switched to Built-in Offline Engine / 已切回內建離線引擎');
+      }
+      document.getElementById('api-drawer').classList.add('hidden');
+    });
+
+    const tabStudent = document.getElementById('tab-student');
+    const tabTeacher = document.getElementById('tab-teacher');
+    const panelStudent = document.getElementById('panel-student');
+    const panelTeacher = document.getElementById('panel-teacher');
+
+    function switchTab(mode) {
+      if (mode === 'student') {
+        panelStudent.classList.remove('hidden');
+        panelTeacher.classList.add('hidden');
+        tabStudent.className = 'flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white text-jade-700 shadow-sm transition flex items-center justify-center gap-2';
+        tabTeacher.className = 'flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-ink transition flex items-center justify-center gap-2';
+      } else {
+        panelTeacher.classList.remove('hidden');
+        panelStudent.classList.add('hidden');
+        tabTeacher.className = 'flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white text-jade-700 shadow-sm transition flex items-center justify-center gap-2';
+        tabStudent.className = 'flex-1 sm:flex-none px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-ink transition flex items-center justify-center gap-2';
+      }
+    }
+
+    tabStudent.addEventListener('click', () => switchTab('student'));
+    tabTeacher.addEventListener('click', () => switchTab('teacher'));
+
+    // =========================================================================
+    // 6. STUDENT INTERACTIVE MODE LOGIC
+    // =========================================================================
+    function updateLastNameFeedbackUI() {
+      const raw = document.getElementById('st-name').value;
+      const box = document.getElementById('st-lastname-feedback');
+      const info = extractLastNameInfo(raw);
+
+      if (info.isSingleWord) {
+        box.className = 'mt-1.5 text-[11px] px-2.5 py-1.5 rounded-lg bg-amberwarm-50 border border-amberwarm-200/80 text-amberwarm-700 flex flex-wrap items-center gap-1.5';
+        box.innerHTML = `
+          <span>💡 建議輸入英文全名（含姓氏）/ Tip: Add your Last Name. 目前暫以首字母 <strong class="font-bold">[${info.initial}]</strong> 對應臺灣姓氏 (${info.previewSurnames}...)</span>
+        `;
+      } else {
+        box.className = 'mt-1.5 text-[11px] px-2.5 py-1.5 rounded-lg bg-jade-50/80 border border-jade-200/80 text-jade-800 flex flex-wrap items-center gap-1.5';
+        box.innerHTML = `
+          <span>✓ 偵測姓氏 / Detected Last Name: <strong class="font-bold">"${escapeHtml(info.lastName)}"</strong> → 對應臺灣姓氏首字母 / Surname Initial: <strong class="font-bold">[${info.initial}]</strong> (${info.previewSurnames}...)</span>
+        `;
+      }
+    }
+
+    document.getElementById('st-name').addEventListener('input', updateLastNameFeedbackUI);
+
+    function copyTextToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast('Copied to clipboard / 已複製中文名字與拼音');
+      } catch (e) {
+        showToast('Unable to copy / 無法複製', true);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    async function renderStudentResults() {
+      const nameInput = document.getElementById('st-name').value.trim() || 'Liam Miller';
+      const gender = document.querySelector('input[name="st-gender"]:checked').value;
+      const style = document.querySelector('input[name="st-style"]:checked').value;
+      const img1 = document.getElementById('st-img1').value;
+      const img2 = document.getElementById('st-img2').value;
+      updateLastNameFeedbackUI();
+
+      const container = document.getElementById('student-results');
+      container.innerHTML = `<div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-sm text-slate-500">Crafting authentic Taiwanese names for ${escapeHtml(nameInput)}... / 正在為您搭配臺灣中文名字...</div>`;
+
+      let candidates = generateStudentCandidates(nameInput, gender, style, img1, img2);
+      candidates = await enhanceWithGeminiIfConfigured(candidates);
+
+      container.innerHTML = candidates.map((item, idx) => {
+        const styleInfo = getStyleBadgeInfo(item.effectiveStyle);
+        const copyPayload = `${item.chineseName} (${item.fullPinyin} | ${item.fullZhuyin}) — ${item.narrative}`;
+        return `
+          <article class="bg-white rounded-2xl border border-slate-200/90 p-5 card-shadow fade-in hover:border-jade-600/50 transition">
+            <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-forest text-white">Option ${idx + 1}</span>
+                  <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">${styleInfo.badge}</span>
+                </div>
+                <div class="flex flex-wrap items-baseline gap-3">
+                  <h4 class="font-serif text-3xl sm:text-4xl font-semibold text-forest tracking-widest">${item.chineseName}</h4>
+                  <div class="text-sm text-slate-600 font-medium">${item.fullPinyin}</div>
+                </div>
+                <div class="text-xs text-sage mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span>注音：<strong>${item.fullZhuyin}</strong></span>
+                  <span class="text-slate-300">|</span>
+                  <span>聲調走勢：${item.tonePattern}</span>
+                </div>
+              </div>
+
+              <button type="button" data-copy="${escapeHtml(copyPayload)}" class="copy-name-btn text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:border-jade-600 hover:bg-jade-50 text-slate-600 hover:text-jade-800 font-medium transition">
+                📋 Copy / 複製
+              </button>
+            </div>
+
+            <!-- Character Breakdown -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 my-3.5">
+              <div class="bg-paper rounded-xl p-2.5 border border-slate-200/70">
+                <div class="text-[10px] font-semibold text-sage uppercase">Surname / 臺灣前 80 大姓</div>
+                <div class="text-sm font-bold text-forest mt-0.5">${item.surname.char} <span class="font-normal text-xs text-slate-500">(${item.surname.pinyin})</span></div>
+                <div class="text-[11px] text-slate-500 mt-0.5">Matched from "${escapeHtml(item.lastNameInfo.lastName)}" [${item.lastNameInfo.initial}]</div>
+              </div>
+              <div class="bg-paper rounded-xl p-2.5 border border-slate-200/70">
+                <div class="text-[10px] font-semibold text-sage uppercase">1st Given Char / 名字第一字</div>
+                <div class="text-sm font-bold text-forest mt-0.5">${item.char1.char} <span class="font-normal text-xs text-slate-500">(${item.char1.pinyin})</span></div>
+                <div class="text-[11px] text-slate-500 mt-0.5">${item.char1.meaning}</div>
+              </div>
+              <div class="bg-paper rounded-xl p-2.5 border border-slate-200/70">
+                <div class="text-[10px] font-semibold text-sage uppercase">2nd Given Char / 名字第二字</div>
+                <div class="text-sm font-bold text-forest mt-0.5">${item.char2.char} <span class="font-normal text-xs text-slate-500">(${item.char2.pinyin})</span></div>
+                <div class="text-[11px] text-slate-500 mt-0.5">${item.char2.meaning}</div>
+              </div>
+            </div>
+
+            <!-- Cultural Narrative -->
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-jade-50/40 rounded-xl p-3 border border-jade-100/80">
+              ${escapeHtml(item.narrative)}
+            </p>
+          </article>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.copy-name-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          copyTextToClipboard(btn.getAttribute('data-copy'));
+        });
+      });
+    }
+
+    document.getElementById('student-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      renderStudentResults();
+    });
+
+    document.getElementById('st-reroll-btn').addEventListener('click', () => {
+      renderStudentResults();
+    });
+
+    // =========================================================================
+    // 7. TEACHER BATCH CSV MODE (UTF-8 / BIG5 DECODING + ZERO DUPLICATES)
+    // =========================================================================
+    function normalizeGender(val) {
+      const s = String(val || '').trim().toLowerCase();
+      if (s === 'm' || s === 'male' || s === '男' || s === '男性') return 'M';
+      if (s === 'f' || s === 'female' || s === '女' || s === '女性') return 'F';
+      return 'N';
+    }
+
+    function normalizeStyle(val) {
+      const s = String(val || '').trim().toLowerCase();
+      if (s.includes('modern') || s.includes('現代') || s.includes('文青')) return 'modern';
+      if (s.includes('class') || s.includes('古典') || s.includes('詩')) return 'classical';
+      return 'either';
+    }
+
+    function normalizeImagery(val) {
+      const s = String(val || '').trim().toLowerCase();
+      if (!s) return 'default';
+      if (s.includes('sun') || s.includes('陽光') || s.includes('太陽') || s.includes('光')) return 'sunshine';
+      if (s.includes('ocean') || s.includes('sea') || s.includes('water') || s.includes('海') || s.includes('水')) return 'ocean';
+      if (s.includes('forest') || s.includes('mountain') || s.includes('tree') || s.includes('山') || s.includes('森') || s.includes('林')) return 'forest';
+      if (s.includes('star') || s.includes('sky') || s.includes('星') || s.includes('天')) return 'stars';
+      if (s.includes('calm') || s.includes('peace') || s.includes('heal') || s.includes('平靜') || s.includes('安') || s.includes('療')) return 'calm';
+      if (s.includes('wis') || s.includes('smart') || s.includes('智') || s.includes('慧')) return 'wisdom';
+      if (s.includes('free') || s.includes('fly') || s.includes('自由') || s.includes('遠')) return 'freedom';
+      if (s.includes('eleg') || s.includes('art') || s.includes('雅') || s.includes('藝')) return 'elegance';
+      if (s.includes('warm') || s.includes('kind') || s.includes('善') || s.includes('溫')) return 'warmth';
+      return 'default';
+    }
+
+    // Automatically detects UTF-8 vs Taiwan Windows Excel Big5 encoding
+    function decodeCsvBuffer(buffer) {
+      try {
+        const utf8Decoder = new TextDecoder('utf-8', { fatal: true });
+        return utf8Decoder.decode(buffer);
+      } catch (e) {
+        try {
+          const big5Decoder = new TextDecoder('big5');
+          return big5Decoder.decode(buffer);
+        } catch (err) {
+          return new TextDecoder('utf-8').decode(buffer);
+        }
+      }
+    }
+
+    // Robust CSV line parser supporting quoted commas
+    function parseCsvText(text) {
+      const cleanText = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      const rows = [];
+      let currentRow = [];
+      let currentVal = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < cleanText.length; i++) {
+        const ch = cleanText[i];
+        const next = cleanText[i + 1];
+
+        if (inQuotes) {
+          if (ch === '"' && next === '"') {
+            currentVal += '"';
+            i++;
+          } else if (ch === '"') {
+            inQuotes = false;
+          } else {
+            currentVal += ch;
+          }
+        } else {
+          if (ch === '"') {
+            inQuotes = true;
+          } else if (ch === ',') {
+            currentRow.push(currentVal.trim());
+            currentVal = '';
+          } else if (ch === '\n') {
+            currentRow.push(currentVal.trim());
+            if (currentRow.some(cell => cell !== '')) rows.push(currentRow);
+            currentRow = [];
+            currentVal = '';
+          } else {
+            currentVal += ch;
+          }
+        }
+      }
+      if (currentVal !== '' || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        if (currentRow.some(cell => cell !== '')) rows.push(currentRow);
+      }
+      return rows;
+    }
+
+    function processBatchStudentRecords(records) {
+      const usedNames = new Set();
+      batchResultsData = records.map((rec) => {
+        const gender = normalizeGender(rec.gender);
+        const style = normalizeStyle(rec.style);
+        const img1 = normalizeImagery(rec.img1);
+        const img2 = normalizeImagery(rec.img2);
+
+        const candidate = generateSingleCandidate(rec.name, gender, style, img1, img2, usedNames);
+        usedNames.add(candidate.chineseName);
+        return candidate;
+      });
+      renderBatchTable();
+    }
+
+    function renderBatchTable() {
+      const wrapper = document.getElementById('batch-results-wrapper');
+      const tbody = document.getElementById('batch-table-body');
+      const badge = document.getElementById('batch-count-badge');
+
+      if (!batchResultsData.length) {
+        wrapper.classList.add('hidden');
+        return;
+      }
+
+      wrapper.classList.remove('hidden');
+      badge.textContent = `${batchResultsData.length} Students / ${batchResultsData.length} 位學生（零撞名）`;
+
+      tbody.innerHTML = batchResultsData.map((row, idx) => {
+        const styleInfo = getStyleBadgeInfo(row.effectiveStyle);
+        const img1Label = (IMAGERY_LABELS[row.img1] || IMAGERY_LABELS.default).zh;
+        const img2Label = (IMAGERY_LABELS[row.img2] || IMAGERY_LABELS.default).zh;
+        const genderBadge = row.gender === 'M' ? '男 / M' : (row.gender === 'F' ? '女 / F' : '中性 / N');
+
+        return `
+          <tr class="hover:bg-paper/70 transition align-top">
+            <td class="py-3.5 px-4 text-xs text-slate-400 font-semibold">${idx + 1}</td>
+            <td class="py-3.5 px-4">
+              <div class="font-semibold text-ink">${escapeHtml(row.fullNameInput)}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">
+                Last Name: <span class="font-medium text-forest">${escapeHtml(row.lastNameInfo.lastName)}</span> [${row.lastNameInfo.initial}] · ${genderBadge}
+              </div>
+            </td>
+            <td class="py-3.5 px-4">
+              <div class="font-serif text-xl font-semibold text-forest tracking-wider">${row.chineseName}</div>
+            </td>
+            <td class="py-3.5 px-4">
+              <div class="text-xs font-medium text-ink">${row.fullPinyin}</div>
+              <div class="text-xs text-sage mt-0.5">${row.fullZhuyin}</div>
+            </td>
+            <td class="py-3.5 px-4">
+              <span class="inline-block text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">${styleInfo.short}</span>
+              <div class="text-[11px] text-slate-500 mt-1">${img1Label}${row.img1 !== row.img2 ? ` + ${img2Label}` : ''}</div>
+            </td>
+            <td class="py-3.5 px-4 text-xs text-slate-600 leading-relaxed">
+              ${escapeHtml(row.narrative)}
+            </td>
+            <td class="py-3.5 px-4 text-right whitespace-nowrap">
+              <button type="button" data-idx="${idx}" class="batch-reroll-btn px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-jade-600 hover:bg-jade-50 text-xs font-medium text-slate-600 hover:text-jade-800 transition">
+                🔄 重抽
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('.batch-reroll-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.getAttribute('data-idx'));
+          const target = batchResultsData[i];
+          const usedExceptCurrent = new Set(batchResultsData.map(r => r.chineseName));
+          // Keep current name in used set so regenerate guarantees a new name
+          const updated = generateSingleCandidate(
+            target.fullNameInput,
+            target.gender,
+            target.requestedStyle,
+            target.img1,
+            target.img2,
+            usedExceptCurrent
+          );
+          batchResultsData[i] = updated;
+          renderBatchTable();
+          showToast(`Updated ${target.fullNameInput} → ${updated.chineseName}`);
+        });
+      });
+    }
+
+    function handleCsvFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const text = decodeCsvBuffer(e.target.result);
+          const rows = parseCsvText(text);
+          if (rows.length === 0) {
+            showToast('CSV file is empty / CSV 檔案為空', true);
+            return;
+          }
+
+          // Detect if first row is a header
+          const firstCell = (rows[0][0] || '').toLowerCase();
+          const hasHeader = firstCell.includes('name') || firstCell.includes('姓名') || firstCell.includes('原文');
+          const dataRows = hasHeader ? rows.slice(1) : rows;
+
+          const records = dataRows
+            .filter(r => r[0] && r[0].trim() !== '')
+            .map(r => ({
+              name: r[0],
+              gender: r[1] || 'N',
+              style: r[2] || 'either',
+              img1: r[3] || '',
+              img2: r[4] || ''
+            }));
+
+          if (!records.length) {
+            showToast('No valid student rows found / 找不到有效的學生資料列', true);
+            return;
+          }
+
+          processBatchStudentRecords(records);
+          showToast(`Successfully generated ${records.length} unique Taiwanese names / 已完成 ${records.length} 位學生取名`);
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to read CSV file / 無法讀取 CSV 檔案', true);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    document.getElementById('csv-file-input').addEventListener('change', (e) => {
+      handleCsvFile(e.target.files[0]);
+      e.target.value = '';
+    });
+
+    const dropzone = document.getElementById('csv-dropzone');
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-jade-600', 'bg-jade-50/40');
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-jade-600', 'bg-jade-50/40');
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-jade-600', 'bg-jade-50/40');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleCsvFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Download CSV Template (UTF-8 with BOM for Excel compatibility)
+    document.getElementById('download-template-btn').addEventListener('click', () => {
+      const csvLines = [
+        'Full_Name,Gender,Style,Imagery_1,Imagery_2',
+        'Liam Miller,M,Modern,Forest,Calm',
+        'Chloe Anderson,F,Classical,Ocean,Elegance',
+        'Mateo Garcia,M,Either,Sunshine,Freedom',
+        'Hannah O\'Connor,F,Either,,'
+      ];
+      const blob = new Blob(['\uFEFF' + csvLines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'taiwan_name_template.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('CSV template downloaded / 已下載 CSV 範本');
+    });
+
+    // Load 8 Sample Students
+    document.getElementById('load-sample-btn').addEventListener('click', () => {
+      const sampleStudents = [
+        { name: 'Liam Miller', gender: 'M', style: 'Modern', img1: 'Forest', img2: 'Calm' },
+        { name: 'Chloe Anderson', gender: 'F', style: 'Classical', img1: 'Ocean', img2: 'Elegance' },
+        { name: 'Mateo Garcia', gender: 'M', style: 'Either', img1: 'Sunshine', img2: 'Freedom' },
+        { name: "Hannah O'Connor", gender: 'F', style: 'Modern', img1: '', img2: '' },
+        { name: 'Lucas van der Berg', gender: 'M', style: 'Classical', img1: 'Wisdom', img2: 'Stars' },
+        { name: 'Emma Wilson', gender: 'F', style: 'Either', img1: 'Warmth', img2: 'Calm' },
+        { name: 'Noah Takahashi', gender: 'N', style: 'Modern', img1: 'Ocean', img2: 'Stars' },
+        { name: 'Sofia Rossi', gender: 'F', style: 'Classical', img1: '', img2: '' }
+      ];
+      processBatchStudentRecords(sampleStudents);
+      showToast('Loaded 8 sample students / 已載入 8 位範例學生');
+    });
+
+    // Export Results CSV (UTF-8 BOM)
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+      if (!batchResultsData.length) {
+        showToast('No results to export / 目前沒有可匯出的資料', true);
+        return;
+      }
+      const csvEscape = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+      const header = [
+        'Original_Name',
+        'Detected_Last_Name',
+        'Surname_Initial',
+        'Gender',
+        'Chinese_Name',
+        'Pinyin',
+        'Zhuyin',
+        'Style',
+        'Imagery_1',
+        'Imagery_2',
+        'English_Cultural_Story'
+      ];
+      const lines = [header.map(csvEscape).join(',')];
+
+      batchResultsData.forEach(row => {
+        const styleInfo = getStyleBadgeInfo(row.effectiveStyle);
+        const img1Info = IMAGERY_LABELS[row.img1] || IMAGERY_LABELS.default;
+        const img2Info = IMAGERY_LABELS[row.img2] || IMAGERY_LABELS.default;
+        lines.push([
+          row.fullNameInput,
+          row.lastNameInfo.lastName,
+          row.lastNameInfo.initial,
+          row.gender,
+          row.chineseName,
+          row.fullPinyin,
+          row.fullZhuyin,
+          styleInfo.exportLabel,
+          `${img1Info.zh} (${img1Info.en})`,
+          `${img2Info.zh} (${img2Info.en})`,
+          row.narrative
+        ].map(csvEscape).join(','));
+      });
+
+      const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'taiwan_student_names_results.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('Exported Excel-ready CSV / 已匯出結果 CSV 檔案');
+    });
+
+    // =========================================================================
+    // 8. INITIALIZE ON PAGE LOAD
+    // =========================================================================
+    updateLastNameFeedbackUI();
+    renderStudentResults();
+  </script>
+</body>
+</html>
